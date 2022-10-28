@@ -1,0 +1,24 @@
+# package files
+*.jar
+*.war
+*.ear
+
+# intellij
+*.iml
+.idea/
+mvnw
+mvnw.cmd
+
+# gradle
+**/.gradle/
+**/build/
+**/classes/
+**/bin/
+**/out/
+
+!gradle-wrapper.jar
+.gradletasknamecache
+*.log
+
+rename.sh
+init.sh
