@@ -20,6 +20,12 @@ import java.util.Enumeration;
 @Slf4j
 public class FirstServiceController {
 
+    Environment env;
+
+    public FirstServiceController(Environment env) {
+        this.env = env;
+    }
+
     @GetMapping("/welcome")
     public String welcome() {
         return "Welcome to the First service.";
@@ -31,9 +37,9 @@ public class FirstServiceController {
         return "Message the First service.";
     }
 
-
     @GetMapping("/check")
-    public String check() {
-        return "check check ";
+    public String check(HttpServletRequest request) {
+        log.info("Server port = {}", request.getServerPort());
+        return String.format("HI THERE, PORT %s", env.getProperty("local.server.port"));
     }
 }

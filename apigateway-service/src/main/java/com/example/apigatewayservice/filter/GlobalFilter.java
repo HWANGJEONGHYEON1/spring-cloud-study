@@ -1,7 +1,6 @@
-package com.example.apigatewayservice.config;
+package com.example.apigatewayservice.filter;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -23,7 +22,7 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
-                log.info("GLOBAL PRE filter : config -> {}, ", config.getBaseMessage());
+            log.info("GLOBAL PRE filter : msg -> {}, ", config.getBaseMessage());
 
             if (config.isPreLogger()) {
                 log.info("GLOBAL PRE filter : id -> {}, ", request.getId());
