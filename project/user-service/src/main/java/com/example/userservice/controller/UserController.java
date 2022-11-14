@@ -14,14 +14,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 @RestController
 @Slf4j
-@RequestMapping("/")
+@RequestMapping("/user-service")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final Greeting greeting;
     private final UserService userService;
+
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseUser> user(@PathVariable String userId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUserByUserId(userId));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<ResponseUser>> users() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUserByAll());
+    }
 
     @PostMapping("/users")
     public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser requestUser) {
@@ -37,7 +52,8 @@ public class UserController {
     }
 
     @GetMapping("/health_check")
-    public String status() {
-        return greeting.getMessage();
+    public String status(HttpServletRequest request) {
+
+        return String.format("It's working in User service on port %s", request.getServerPort());
     }
 }
