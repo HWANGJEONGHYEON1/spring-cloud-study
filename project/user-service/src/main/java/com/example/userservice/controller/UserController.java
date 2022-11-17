@@ -19,12 +19,11 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/user-service")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
 
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseUser> user(@PathVariable String userId) {
