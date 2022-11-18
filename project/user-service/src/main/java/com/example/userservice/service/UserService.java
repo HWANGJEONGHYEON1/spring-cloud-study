@@ -8,6 +8,7 @@ import com.example.userservice.vo.ResponseOrder;
 import com.example.userservice.vo.ResponseUser;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,7 +30,6 @@ public class UserService implements UserDetailsService {
 
     public UserDto createUser(UserDto userDto) {
         userDto.setUserId(UUID.randomUUID().toString());
-
 
         UserEntity userEntity = ModelMapperUtils.modelMapper().map(userDto, UserEntity.class);
         userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getPwd()));
@@ -76,8 +76,19 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("user not found");
         }
 
-        return new User(userEntity.getUserId(), userEntity.getEncryptedPwd(),
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
                 true, true, true, true,
                 new ArrayList<>());
+    }
+
+    public UserDto getUserDetailsByEmail(String username) {
+        UserEntity userEntity = userRepository.findByEmail(username);
+
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
+        return userDto;
     }
 }
