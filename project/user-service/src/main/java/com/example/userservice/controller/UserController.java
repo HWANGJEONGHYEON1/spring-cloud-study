@@ -10,6 +10,7 @@ import com.example.userservice.vo.ResponseUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final Environment env;
 
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseUser> user(@PathVariable String userId) {
@@ -53,6 +55,9 @@ public class UserController {
     @GetMapping("/health_check")
     public String status(HttpServletRequest request) {
 
-        return String.format("It's working in User service on port %s", request.getServerPort());
+        return String.format("port(local.server.port)=" + env.getProperty("local.server.port") +
+                ", port(server.port)=" + env.getProperty("server.port") +
+                ", token=" + env.getProperty("token.secret") +
+                ", expiration=" + env.getProperty("token.expiration_time")) ;
     }
 }
