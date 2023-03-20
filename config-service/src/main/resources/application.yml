@@ -4,8 +4,20 @@ server:
 spring:
   application:
     name: config-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   cloud:
     config:
       server:
         git:
-          uri: file:///Users/we/study/spring-cloud/git-local-repo
+          uri: https://github.com/HWANGJEONGHYEON1/spring-cloud-config
+#          uri: file:///Users/we/study/spring-cloud/git-local-repo
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh

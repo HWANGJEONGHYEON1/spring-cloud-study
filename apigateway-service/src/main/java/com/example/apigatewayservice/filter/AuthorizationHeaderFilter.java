@@ -68,7 +68,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
-        log.error("err");
+        log.error("ERROR MSG: {}", err);
         return response.setComplete();
     }
 
