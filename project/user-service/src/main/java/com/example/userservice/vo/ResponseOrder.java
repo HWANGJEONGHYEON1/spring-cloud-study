@@ -10,7 +10,7 @@ public class ResponseOrder {
     private Integer qty;
     private Integer unitPrice;
     private Integer totalPrice;
-    private LocalDate createdAt;
+    private String createdAt;
 
     private String orderId;
 

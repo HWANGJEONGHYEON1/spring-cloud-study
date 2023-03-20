@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -25,10 +26,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
     private final Environment env;
 
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseUser> user(@PathVariable String userId) {
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUserByUserId(userId));
     }

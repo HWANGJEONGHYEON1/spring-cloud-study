@@ -9,17 +9,19 @@ import com.example.userservice.vo.ResponseUser;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,8 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final Environment env;
+    private final RestTemplate restTemplate;
 
     public UserDto createUser(UserDto userDto) {
         userDto.setUserId(UUID.randomUUID().toString());
@@ -50,8 +54,12 @@ public class UserService implements UserDetailsService {
         UserDto userDto = ModelMapperUtils.modelMapper()
                 .map(userEntity, UserDto.class);
 
-        List<ResponseOrder> orders = new ArrayList<>();
-        userDto.setOrders(orders);
+        String orderUrl = String.format(Objects.requireNonNull(env.getProperty("order-service.url")), userId);
+        ResponseEntity<List<ResponseOrder>> orderListResponses = restTemplate.exchange(orderUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<ResponseOrder>>() {
+        });
+
+        List<ResponseOrder> orderList = orderListResponses.getBody();
+        userDto.setOrders(orderList);
 
         return ModelMapperUtils.modelMapper()
                 .map(userDto, ResponseUser.class);

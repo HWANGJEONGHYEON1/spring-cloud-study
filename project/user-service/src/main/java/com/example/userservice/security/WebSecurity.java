@@ -30,7 +30,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/**")
-                .hasIpAddress("10.102.7.111")
+                .hasIpAddress("192.168.219.104")
                 .and()
                 .addFilter(getAuthenticationFilter());
 
