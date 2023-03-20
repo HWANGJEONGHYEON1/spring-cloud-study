@@ -1,13 +1,17 @@
 package com.example.userservice.service;
 
+import com.example.userservice.client.OrderServiceClient;
 import com.example.userservice.dto.UserDto;
+import com.example.userservice.error.FeignErrorDecoder;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.utils.ModelMapperUtils;
 import com.example.userservice.vo.ResponseOrder;
 import com.example.userservice.vo.ResponseUser;
 import com.google.common.collect.Lists;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
@@ -25,12 +29,13 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final Environment env;
-    private final RestTemplate restTemplate;
+    private final FeignErrorDecoder feignErrorDecoder;
+    private final OrderServiceClient orderServiceClient;
 
     public UserDto createUser(UserDto userDto) {
         userDto.setUserId(UUID.randomUUID().toString());
@@ -54,11 +59,8 @@ public class UserService implements UserDetailsService {
         UserDto userDto = ModelMapperUtils.modelMapper()
                 .map(userEntity, UserDto.class);
 
-        String orderUrl = String.format(Objects.requireNonNull(env.getProperty("order-service.url")), userId);
-        ResponseEntity<List<ResponseOrder>> orderListResponses = restTemplate.exchange(orderUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<ResponseOrder>>() {
-        });
-
-        List<ResponseOrder> orderList = orderListResponses.getBody();
+        /* FeignException handling*/
+        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
         userDto.setOrders(orderList);
 
         return ModelMapperUtils.modelMapper()
