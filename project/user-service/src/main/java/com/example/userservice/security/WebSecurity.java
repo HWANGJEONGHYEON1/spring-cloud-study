@@ -30,7 +30,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/**")
-                .hasIpAddress("192.168.219.104")
+                .permitAll()
+//                .hasIpAddress("110.13.128.163")
                 .and()
                 .addFilter(getAuthenticationFilter());
 
@@ -38,9 +39,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     private Filter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter filter = new AuthenticationFilter(authenticationManager(), userService, environment);
 
-        return filter;
+        return new AuthenticationFilter(authenticationManager(), userService, environment);
     }
 
     @Override

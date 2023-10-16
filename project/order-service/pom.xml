@@ -66,11 +66,11 @@
             <version>2.7.2</version>
         </dependency>
 
-<!--        &lt;!&ndash; Kafka &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.kafka</groupId>-->
-<!--            <artifactId>spring-kafka</artifactId>-->
-<!--        </dependency>-->
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
 
 <!--        &lt;!&ndash; zipkin &ndash;&gt;-->
 <!--        <dependency>-->

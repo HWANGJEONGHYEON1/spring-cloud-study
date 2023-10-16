@@ -12,4 +12,15 @@ public class Payload {
     private int qty;
     private int unit_price;
     private int total_price;
+
+    public static Payload from(OrderDto orderDto) {
+        return Payload.builder()
+                .order_id(orderDto.getOrderId())
+                .user_id(orderDto.getUserId())
+                .product_id(orderDto.getProductId())
+                .qty(orderDto.getQty())
+                .unit_price(orderDto.getUnitPrice())
+                .total_price(orderDto.getTotalPrice())
+                .build();
+    }
 }
