@@ -4,12 +4,12 @@ server:
 spring:
   application:
     name: order-service
-#  zipkin:
-#    base-url: http://localhost:9411
-#    enabled: true
-#  sleuth:
-#    sampler:
-#      probability: 1.0
+  zipkin:
+    base-url: http://localhost:9411
+    enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0
   h2:
     console:
       enabled: true
@@ -42,8 +42,8 @@ logging:
   level:
     com.example.orderservice: DEBUG
 
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: health, httptrace, info, metrics, prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, httptrace, info, metrics, prometheus

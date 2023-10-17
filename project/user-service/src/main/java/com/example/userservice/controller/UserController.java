@@ -7,6 +7,7 @@ import com.example.userservice.utils.ModelMapperUtils;
 import com.example.userservice.vo.Greeting;
 import com.example.userservice.vo.RequestUser;
 import com.example.userservice.vo.ResponseUser;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -56,11 +57,18 @@ public class UserController {
     }
 
     @GetMapping("/health_check")
+    @Timed(value = "users.status", longTask = true)
     public String status(HttpServletRequest request) {
 
         return String.format("port(local.server.port)=" + env.getProperty("local.server.port") +
                 ", port(server.port)=" + env.getProperty("server.port") +
                 ", token=" + env.getProperty("token.secret") +
                 ", expiration=" + env.getProperty("token.expiration_time")) ;
+    }
+
+    @GetMapping("/welcome")
+    @Timed(value = "users.welcome", longTask = true)
+    public String hello() {
+        return "hello";
     }
 }
