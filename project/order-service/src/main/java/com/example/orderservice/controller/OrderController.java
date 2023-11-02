@@ -27,6 +27,7 @@ public class OrderController {
     private final OrderService orderService;
     private final KafkaProducer kafkaProducer;
     private final OrderProducer orderProducer;
+    private final ModelMapper mapper = new ModelMapper();
     @Autowired
     public OrderController(Environment env, OrderService orderService, KafkaProducer kafkaProducer, OrderProducer orderProducer) {
         this.env = env;
@@ -45,7 +46,7 @@ public class OrderController {
     public ResponseEntity<ResponseOrder> createOrder(@PathVariable("userId") String userId,
                                                      @RequestBody RequestOrder orderDetails) {
         log.info("Before add orders data");
-        ModelMapper mapper = new ModelMapper();
+
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         OrderDto orderDto = mapper.map(orderDetails, OrderDto.class);

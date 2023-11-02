@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Table(name = "catalog")
 public class CatalogEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

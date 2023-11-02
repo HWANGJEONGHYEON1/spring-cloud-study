@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository) {
