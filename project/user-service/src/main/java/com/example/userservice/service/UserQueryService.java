@@ -1,7 +1,7 @@
 package com.example.userservice.service;
 
 import com.example.userservice.client.OrderServiceClient;
-import com.example.userservice.dto.UserDto;
+import com.example.userservice.dto.UserCommand;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.utils.ModelMapperUtils;
@@ -13,38 +13,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService implements UserDetailsService {
+public class UserQueryService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final OrderServiceClient orderServiceClient;
-
     private final CircuitBreakerFactory circuitBreakerFactory;
-
-    public UserDto createUser(UserDto userDto) {
-        userDto.setUserId(UUID.randomUUID().toString());
-
-        UserEntity userEntity = ModelMapperUtils.modelMapper().map(userDto, UserEntity.class);
-        userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getPwd()));
-
-        userRepository.save(userEntity);
-
-        return ModelMapperUtils.modelMapper()
-                .map(userEntity, UserDto.class);
-    }
-
+    private final OrderServiceClient orderServiceClient;
     public ResponseUser getUserByUserId(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
 
@@ -52,8 +34,8 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
 
-        UserDto userDto = ModelMapperUtils.modelMapper()
-                .map(userEntity, UserDto.class);
+        UserCommand userDto = ModelMapperUtils.modelMapper()
+                .map(userEntity, UserCommand.class);
 
         /* FeignException handling*/
 //        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
@@ -84,26 +66,14 @@ public class UserService implements UserDetailsService {
         return result;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(email);
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("user not found");
-        }
-
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
-                true, true, true, true,
-                new ArrayList<>());
-    }
-
-    public UserDto getUserDetailsByEmail(String username) {
+    public UserCommand getUserDetailsByEmail(String username) {
         UserEntity userEntity = userRepository.findByEmail(username);
 
         if (userEntity == null) {
             throw new UsernameNotFoundException(username);
         }
 
-        UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
+        UserCommand userDto = new ModelMapper().map(userEntity, UserCommand.class);
         return userDto;
     }
 }

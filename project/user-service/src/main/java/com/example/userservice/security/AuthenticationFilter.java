@@ -1,12 +1,11 @@
 package com.example.userservice.security;
 
-import com.example.userservice.dto.UserDto;
-import com.example.userservice.service.UserService;
+import com.example.userservice.dto.UserCommand;
+import com.example.userservice.service.UserCommandService;
 import com.example.userservice.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,10 +26,10 @@ import java.util.Date;
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final UserService userService;
+    private final UserCommandService userService;
     private final Environment environment;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService, Environment environment) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, UserCommandService userService, Environment environment) {
         super(authenticationManager);
         this.userService = userService;
         this.environment = environment;
@@ -53,7 +52,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String username = ((User) authResult.getPrincipal()).getUsername();
         log.debug(username);
-        UserDto userDetails = userService.getUserDetailsByEmail(username);
+        UserCommand userDetails = userService.getUserDetailsByEmail(username);
 
         String token = Jwts.builder()
                 .setSubject(userDetails.getUserId())

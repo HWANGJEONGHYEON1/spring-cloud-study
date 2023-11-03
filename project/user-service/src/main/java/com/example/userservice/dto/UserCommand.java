@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class UserDto {
+public class UserCommand {
     private String email;
     private String name;
     private String pwd;

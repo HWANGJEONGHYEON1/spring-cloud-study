@@ -1,9 +1,6 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.dto.UserDto;
-import com.example.userservice.service.UserService;
-import com.example.userservice.utils.ModelMapperUtils;
-import com.example.userservice.vo.RequestUser;
+import com.example.userservice.service.UserQueryService;
 import com.example.userservice.vo.ResponseUser;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
@@ -11,18 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@Slf4j
-@RequestMapping("/")
 @RequiredArgsConstructor
-public class UserController {
+@Slf4j
+public class UserQueryController {
 
-    private final UserService userService;
-
+    private final UserQueryService userService;
     private final Environment env;
 
     @GetMapping("/users/{userId}")
@@ -36,19 +34,6 @@ public class UserController {
     public ResponseEntity<List<ResponseUser>> users() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUserByAll());
-    }
-
-    @PostMapping("/users")
-    public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser requestUser) {
-
-        UserDto requestUserDto = ModelMapperUtils.modelMapper()
-                .map(requestUser, UserDto.class);
-        UserDto userDto = userService.createUser(requestUserDto);
-
-        ResponseUser responseUser = ModelMapperUtils.modelMapper()
-                .map(userDto, ResponseUser.class);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(responseUser);
     }
 
     @GetMapping("/health_check")

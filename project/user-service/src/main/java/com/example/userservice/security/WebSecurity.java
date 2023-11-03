@@ -1,6 +1,6 @@
 package com.example.userservice.security;
 
-import com.example.userservice.service.UserService;
+import com.example.userservice.service.UserCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -17,7 +17,7 @@ import javax.servlet.Filter;
 @RequiredArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private final UserService userService;
+    private final UserCommandService userService;
     private final Environment environment;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
